@@ -37,3 +37,44 @@
     <a href="{{ url_for('admin_top') }}">管理者トップに戻る</a>
 </body>
 </html>
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <title>弁当登録</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <h1>弁当登録</h1>
+    
+    <form method="post" enctype="multipart/form-data">
+        <label>名前: <input type="text" name="name" required></label><br>
+        <label>価格: <input type="number" name="price" step="0.01" required></label><br>
+        <label>今日表示: <input type="checkbox" name="show_today"></label><br>
+        <label>画像: <input type="file" name="image" accept="image/*"></label><br>
+        <button type="submit">登録</button>
+    </form>
+    
+    <h2>登録済み弁当</h2>
+    {% for item in bento_list %}
+    <div class="menu-item">
+        <h3>{{ item.name }}</h3>
+        <p>価格: {{ item.price }}円</p>
+        <p>今日表示: {{ '○' if item.show_today else '×' }}</p>
+        {% if item.image %}
+        <img src="{{ url_for('static', filename='uploads/' + item.image) }}" alt="{{ item.name }}" style="max-width: 100px;">
+        {% endif %}
+        <form method="post" style="display: inline;">
+            <input type="hidden" name="bento_index" value="{{ loop.index0 }}">
+            <input type="text" name="name" value="{{ item.name }}" required>
+            <input type="number" name="price" value="{{ item.price }}" step="0.01" required>
+            <input type="checkbox" name="show_today" {{ 'checked' if item.show_today else '' }}>
+            <input type="file" name="image" accept="image/*">
+            <button type="submit">更新</button>
+        </form>
+    </div>
+    {% endfor %}
+    
+    <a href="{{ url_for('admin_top') }}">管理者トップに戻る</a>
+</body>
+</html>

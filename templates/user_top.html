@@ -8,6 +8,38 @@
 </head>
 <body>
     <h1>利用者トップページ</h1>
+    
+    {% if bento_menu %}
+    <h2>本日の弁当メニュー</h2>
+    <div class="menu-items">
+        {% for item in bento_menu %}
+        <div class="menu-item">
+            <h3>{{ item.name }}</h3>
+            <p>価格: {{ item.price }}円</p>
+            {% if item.image %}
+            <img src="{{ url_for('static', filename='uploads/' + item.image) }}" alt="{{ item.name }}" style="max-width: 200px;">
+            {% endif %}
+        </div>
+        {% endfor %}
+    </div>
+    {% endif %}
+
+    {% if bread_menu %}
+    <h2>本日のパンメニュー</h2>
+    <div class="menu-items">
+        {% for item in bread_menu %}
+        <div class="menu-item">
+            <h3>{{ item.name }}</h3>
+            <p>価格: {{ item.price }}円</p>
+            <p>数量: {{ item.quantity }}個</p>
+            {% if item.image %}
+            <img src="{{ url_for('static', filename='uploads/' + item.image) }}" alt="{{ item.name }}" style="max-width: 200px;">
+            {% endif %}
+        </div>
+        {% endfor %}
+    </div>
+    {% endif %}
+
     <nav>
         <ul>
             <li><a href="{{ url_for('order') }}">注文する</a></li>

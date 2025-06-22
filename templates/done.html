@@ -23,3 +23,34 @@
     <a href="{{ url_for('user_top') }}">トップページに戻る</a>
 </body>
 </html>
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <title>注文完了</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <h1>注文完了</h1>
+    <div class="order-summary">
+        <p><strong>注文ID:</strong> {{ order.id4 }}</p>
+        <p><strong>学年:</strong> {{ order.grade }}</p>
+        <p><strong>組:</strong> {{ order.class }}</p>
+        <p><strong>番号:</strong> {{ order.number }}</p>
+        <p><strong>名前:</strong> {{ order.name }}</p>
+        
+        {% if order.bento %}
+        <p><strong>弁当:</strong> {{ order.bento|join(', ') }}</p>
+        {% endif %}
+        
+        {% if order.bread %}
+        <p><strong>パン:</strong> {{ order.bread|join(', ') }}</p>
+        {% endif %}
+        
+        <p><strong>合計金額:</strong> {{ order.total_price }}円</p>
+    </div>
+    
+    <p>ご注文ありがとうございました。</p>
+    <a href="{{ url_for('user_top') }}">トップページに戻る</a>
+</body>
+</html>

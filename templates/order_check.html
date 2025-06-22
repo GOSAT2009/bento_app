@@ -37,3 +37,40 @@
     <a href="{{ url_for('admin_top') }}">管理者トップに戻る</a>
 </body>
 </html>
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <title>注文確認</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <h1>注文確認 ({{ date }})</h1>
+    
+    <h2>弁当集計</h2>
+    {% for name, count in bento_counts.items() %}
+    <p>{{ name }}: {{ count }}個</p>
+    {% endfor %}
+    
+    <h2>パン集計</h2>
+    {% for name, count in bread_counts.items() %}
+    <p>{{ name }}: {{ count }}個</p>
+    {% endfor %}
+    
+    <h2>個別注文</h2>
+    {% for order in orders %}
+    <div class="order-item">
+        <p><strong>{{ order.id4 }}</strong> - {{ order.name }} ({{ order.grade }}年{{ order.class }}組{{ order.number }}番)</p>
+        <p>弁当: {{ order.bento|join(', ') if order.bento else 'なし' }}</p>
+        <p>パン: {{ order.bread|join(', ') if order.bread else 'なし' }}</p>
+        <p>合計: {{ order.total_price }}円</p>
+        <form method="post" action="{{ url_for('delete_order', date_str=date, index=loop.index0) }}" style="display: inline;">
+            <button type="submit" onclick="return confirm('削除しますか？')">削除</button>
+        </form>
+    </div>
+    {% endfor %}
+    
+    <a href="{{ url_for('export_csv', date_str=date) }}">CSVエクスポート</a><br>
+    <a href="{{ url_for('admin_top') }}">管理者トップに戻る</a>
+</body>
+</html>

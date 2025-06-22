@@ -233,6 +233,4 @@ def password_change():
         flash('現在のパスワードが違います', 'error')
     return render_template('password_change.html')
 
-# 実行
-if __name__ == '__main__':
-        app.run(host='0.0.0.0', port=8080, debug=True)
+

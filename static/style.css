@@ -26,3 +26,31 @@ button {
 button:hover {
     background-color: #45a049;
 }
+
+.error {
+    color: red;
+    margin: 10px 0;
+}
+
+.message {
+    color: green;
+    margin: 10px 0;
+}
+
+nav ul {
+    list-style-type: none;
+    padding: 0;
+}
+
+nav li {
+    margin: 10px 0;
+}
+
+nav a {
+    text-decoration: none;
+    color: #4CAF50;
+}
+
+nav a:hover {
+    text-decoration: underline;
+}

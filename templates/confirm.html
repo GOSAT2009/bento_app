@@ -1,0 +1,21 @@
+
+<!-- templates/confirm.html -->
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <title>注文確認</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <h1>注文確認</h1>
+    <p>学年: {{ form.grade }}</p>
+    <p>組: {{ form.class }}</p>
+    <p>番号: {{ form.number }}</p>
+    <p>名前: {{ form.name }}</p>
+    <p>弁当: {{ form.getlist('bento')|join(', ') }}</p>
+    <p>パン: {{ form.getlist('bread')|join(', ') }}</p>
+    <p>合計金額: {{ form.total_price }}円</p>
+    <a href="{{ url_for('user_top') }}">戻る</a>
+</body>
+</html>

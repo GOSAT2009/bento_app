@@ -1,3 +1,4 @@
+
 <!-- templates/done.html -->
 <!DOCTYPE html>
 <html lang="ja">
@@ -9,6 +10,16 @@
 <body>
     <h1>注文完了</h1>
     <p>ありがとうございました。</p>
-    <a href="{{ url_for('user_top') }}">戻る</a>
+    <div>
+        <h2>注文内容</h2>
+        <p>学年: {{ order.grade }}</p>
+        <p>組: {{ order.class }}</p>
+        <p>番号: {{ order.number }}</p>
+        <p>名前: {{ order.name }}</p>
+        <p>弁当: {{ order.bento|join(', ') }}</p>
+        <p>パン: {{ order.bread|join(', ') }}</p>
+        <p>合計金額: {{ order.total_price }}円</p>
+    </div>
+    <a href="{{ url_for('user_top') }}">トップページに戻る</a>
 </body>
 </html>

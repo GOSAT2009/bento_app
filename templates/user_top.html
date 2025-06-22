@@ -1,0 +1,18 @@
+<!-- templates/user_top.html -->
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <title>利用者トップページ</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <h1>利用者トップページ</h1>
+    <nav>
+        <ul>
+            <li><a href="{{ url_for('order') }}">注文する</a></li>
+        </ul>
+    </nav>
+</body>
+</html>
+

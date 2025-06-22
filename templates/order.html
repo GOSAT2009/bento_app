@@ -1,0 +1,31 @@
+<!-- templates/order.html -->
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <title>注文ページ</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <h1>注文ページ</h1>
+    <form action="{{ url_for('order') }}" method="post">
+        <label>学年: <input type="number" name="grade" required></label><br>
+        <label>組: <input type="number" name="class" required></label><br>
+        <label>番号: <input type="number" name="number" required></label><br>
+        <label>名前: <input type="text" name="name" required></label><br>
+
+        <h2>弁当メニュー</h2>
+        {% for item in bento_menu %}
+            <label><input type="checkbox" name="bento" value="{{ item.name }}">{{ item.name }} ({{ item.price }}円)</label><br>
+        {% endfor %}
+
+        <h2>パンメニュー</h2>
+        {% for item in bread_menu %}
+            <label><input type="checkbox" name="bread" value="{{ item.name }}">{{ item.name }} ({{ item.price }}円)</label><br>
+        {% endfor %}
+
+        <label>合計金額: <input type="number" name="total_price" required></label><br>
+        <button type="submit">注文確認</button>
+    </form>
+</body>
+</html>

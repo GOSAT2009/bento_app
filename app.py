@@ -1,5 +1,3 @@
-
-from flask import Flask, render_template, request, redirect, session, url_for, flash, send_file, jsonify
 from werkzeug.utils import secure_filename
 from flask_sqlalchemy import SQLAlchemy
 from datetime import datetime, date, timedelta
@@ -344,6 +342,7 @@ def update_order_status(order_id, status):
         db.session.commit()
     
     return redirect(url_for('order_management'))
+
 
 @app.route('/delete_order/<int:order_id>')
 def delete_order(order_id):

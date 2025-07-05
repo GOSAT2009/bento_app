@@ -503,6 +503,24 @@ def password_change():
     
     return render_template('password_change.html')
 
+@app.route('/toggle_product_visibility/<int:product_id>', methods=['POST'])
+def toggle_product_visibility(product_id):
+    if not session.get('admin'):
+        return {'success': False, 'error': 'Unauthorized'}, 401
+    
+    product = Product.query.get(product_id)
+    if not product:
+        return {'success': False, 'error': 'Product not found'}, 404
+    
+    # 表示日の切り替え（None = 常時表示、今日の日付 = 今日のみ表示）
+    if product.show_date is None:
+        product.show_date = date.today()
+    else:
+        product.show_date = None
+    
+    db.session.commit()
+    return {'success': True, 'visible': product.show_date is None}
+
 if __name__ == '__main__':
     create_tables()
     app.run(host='0.0.0.0', port=5000, debug=True)

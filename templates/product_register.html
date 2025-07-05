@@ -39,27 +39,21 @@
             </div>
             
             <div class="form-group">
-                <label>
-                    <input type="checkbox" id="enableStock" onchange="toggleStockInput()"> 在庫数を設定
-                </label>
+                <button type="button" class="btn btn-toggle" id="enableStockBtn" onclick="toggleStockInput()">在庫数を設定</button>
                 <div id="stockGroup" style="display: none;">
                     <label>在庫数: <input type="number" name="stock_quantity" id="productStock"></label>
                 </div>
             </div>
             
             <div class="form-group">
-                <label>
-                    <input type="checkbox" id="enableDeadline" onchange="toggleDeadlineInput()"> 注文締切時間を設定
-                </label>
+                <button type="button" class="btn btn-toggle" id="enableDeadlineBtn" onclick="toggleDeadlineInput()">注文締切時間を設定</button>
                 <div id="deadlineGroup" style="display: none;">
                     <label>注文締切時間: <input type="time" name="deadline_time" id="productDeadline"></label>
                 </div>
             </div>
             
             <div class="form-group">
-                <label>
-                    <input type="checkbox" id="enableShowDate" onchange="toggleShowDateInput()"> 表示日を設定
-                </label>
+                <button type="button" class="btn btn-toggle" id="enableShowDateBtn" onclick="toggleShowDateInput()">表示日を設定</button>
                 <div id="showDateGroup" style="display: none;">
                     <label>表示日: <input type="date" name="show_date" id="productShowDate"></label>
                 </div>
@@ -103,6 +97,10 @@
                                  alt="{{ product.name }}" class="product-image-small">
                         {% endif %}
                         <div class="product-actions">
+                            <button class="btn btn-small btn-visibility" onclick="toggleProductVisibility({{ product.id }}, this)" 
+                                    data-visible="{% if product.show_date %}true{% else %}false{% endif %}">
+                                {% if product.show_date %}表示中{% else %}非表示{% endif %}
+                            </button>
                             <button class="btn btn-small" onclick="editProduct({{ product.id }}, '{{ product.name }}', '{{ product.category }}', {{ product.price }}, '{{ product.stock_quantity or '' }}', '{{ product.deadline_time or '' }}', '{{ product.show_date or '' }}')">編集</button>
                         </div>
                     </div>
@@ -129,6 +127,10 @@
             }
         });
 
+        let stockEnabled = false;
+        let deadlineEnabled = false;
+        let showDateEnabled = false;
+
         function editProduct(id, name, category, price, stock, deadline, showDate) {
             document.getElementById('productId').value = id;
             document.getElementById('productName').value = name;
@@ -137,31 +139,37 @@
             
             // 在庫数の処理
             if (stock !== 'None' && stock !== '') {
-                document.getElementById('enableStock').checked = true;
+                stockEnabled = true;
+                document.getElementById('enableStockBtn').classList.add('active');
                 document.getElementById('stockGroup').style.display = 'block';
                 document.getElementById('productStock').value = stock;
             } else {
-                document.getElementById('enableStock').checked = false;
+                stockEnabled = false;
+                document.getElementById('enableStockBtn').classList.remove('active');
                 document.getElementById('stockGroup').style.display = 'none';
             }
             
             // 締切時間の処理
             if (deadline !== 'None' && deadline !== '') {
-                document.getElementById('enableDeadline').checked = true;
+                deadlineEnabled = true;
+                document.getElementById('enableDeadlineBtn').classList.add('active');
                 document.getElementById('deadlineGroup').style.display = 'block';
                 document.getElementById('productDeadline').value = deadline;
             } else {
-                document.getElementById('enableDeadline').checked = false;
+                deadlineEnabled = false;
+                document.getElementById('enableDeadlineBtn').classList.remove('active');
                 document.getElementById('deadlineGroup').style.display = 'none';
             }
             
             // 表示日の処理
             if (showDate !== 'None' && showDate !== '') {
-                document.getElementById('enableShowDate').checked = true;
+                showDateEnabled = true;
+                document.getElementById('enableShowDateBtn').classList.add('active');
                 document.getElementById('showDateGroup').style.display = 'block';
                 document.getElementById('productShowDate').value = showDate;
             } else {
-                document.getElementById('enableShowDate').checked = false;
+                showDateEnabled = false;
+                document.getElementById('enableShowDateBtn').classList.remove('active');
                 document.getElementById('showDateGroup').style.display = 'none';
             }
         }
@@ -176,56 +184,93 @@
             document.getElementById('productShowDate').value = '';
             document.getElementById('newCategoryGroup').style.display = 'none';
             
-            // チェックボックスをリセット
-            document.getElementById('enableStock').checked = false;
-            document.getElementById('enableDeadline').checked = false;
-            document.getElementById('enableShowDate').checked = false;
+            // ボタンをリセット
+            stockEnabled = false;
+            deadlineEnabled = false;
+            showDateEnabled = false;
+            document.getElementById('enableStockBtn').classList.remove('active');
+            document.getElementById('enableDeadlineBtn').classList.remove('active');
+            document.getElementById('enableShowDateBtn').classList.remove('active');
             document.getElementById('stockGroup').style.display = 'none';
             document.getElementById('deadlineGroup').style.display = 'none';
             document.getElementById('showDateGroup').style.display = 'none';
         }
         
         function toggleStockInput() {
-            const enableStock = document.getElementById('enableStock');
+            stockEnabled = !stockEnabled;
             const stockGroup = document.getElementById('stockGroup');
             const productStock = document.getElementById('productStock');
+            const enableStockBtn = document.getElementById('enableStockBtn');
             
-            if (enableStock.checked) {
+            if (stockEnabled) {
                 stockGroup.style.display = 'block';
                 productStock.required = true;
+                enableStockBtn.classList.add('active');
             } else {
                 stockGroup.style.display = 'none';
                 productStock.required = false;
                 productStock.value = '';
+                enableStockBtn.classList.remove('active');
             }
         }
         
         function toggleDeadlineInput() {
-            const enableDeadline = document.getElementById('enableDeadline');
+            deadlineEnabled = !deadlineEnabled;
             const deadlineGroup = document.getElementById('deadlineGroup');
             const productDeadline = document.getElementById('productDeadline');
+            const enableDeadlineBtn = document.getElementById('enableDeadlineBtn');
             
-            if (enableDeadline.checked) {
+            if (deadlineEnabled) {
                 deadlineGroup.style.display = 'block';
+                enableDeadlineBtn.classList.add('active');
             } else {
                 deadlineGroup.style.display = 'none';
                 productDeadline.value = '';
+                enableDeadlineBtn.classList.remove('active');
             }
         }
         
         function toggleShowDateInput() {
-            const enableShowDate = document.getElementById('enableShowDate');
+            showDateEnabled = !showDateEnabled;
             const showDateGroup = document.getElementById('showDateGroup');
             const productShowDate = document.getElementById('productShowDate');
+            const enableShowDateBtn = document.getElementById('enableShowDateBtn');
             
-            if (enableShowDate.checked) {
+            if (showDateEnabled) {
                 showDateGroup.style.display = 'block';
                 productShowDate.required = true;
+                enableShowDateBtn.classList.add('active');
             } else {
                 showDateGroup.style.display = 'none';
                 productShowDate.required = false;
                 productShowDate.value = '';
+                enableShowDateBtn.classList.remove('active');
             }
+        }
+
+        function toggleProductVisibility(productId, button) {
+            const isVisible = button.dataset.visible === 'true';
+            const newVisibility = !isVisible;
+            
+            // サーバーに表示状態の変更をリクエスト
+            fetch(`/toggle_product_visibility/${productId}`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                }
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    button.dataset.visible = newVisibility.toString();
+                    button.textContent = newVisibility ? '表示中' : '非表示';
+                    button.classList.toggle('btn-hidden', !newVisibility);
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert('表示状態の変更に失敗しました');
+            });
         }
 
         

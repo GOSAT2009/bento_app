@@ -459,6 +459,40 @@ h3 {
     margin-bottom: 5px;
 }
 
+/* トグルボタンのスタイル */
+.btn-toggle {
+    background: #ecf0f1;
+    color: #2c3e50;
+    border: 2px solid #bdc3c7;
+    transition: all 0.3s ease;
+}
+
+.btn-toggle:hover {
+    background: #d5dbdb;
+}
+
+.btn-toggle.active {
+    background: #3498db;
+    color: white;
+    border-color: #2980b9;
+}
+
+.btn-visibility {
+    min-width: 70px;
+    margin-right: 5px;
+}
+
+.btn-visibility.btn-hidden {
+    background: #e74c3c;
+    color: white;
+}
+
+.product-actions {
+    display: flex;
+    gap: 5px;
+    flex-wrap: wrap;
+}
+
 .order-items {
     margin-bottom: 15px;
 }

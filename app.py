@@ -102,8 +102,10 @@ def is_order_allowed(product):
     return True
 
 def get_available_products():
-    products = Product.query.filter_by(show_date=date.today()).all()
-    return [p for p in products if is_order_allowed(p) and p.stock_quantity > 0]
+    products = Product.query.filter(
+        (Product.show_date == date.today()) | (Product.show_date == None)
+    ).all()
+    return [p for p in products if is_order_allowed(p) and (p.stock_quantity is None or p.stock_quantity > 0)]
 
 def predict_sales(product_id, days_ahead=3):
     sales_data = SalesInput.query.filter_by(product_id=product_id).order_by(SalesInput.sale_date).all()
@@ -281,9 +283,9 @@ def product_register():
             return render_template('product_register.html', products=products, categories=categories)
         
         price = float(request.form['price'])
-        stock_quantity = int(request.form['stock_quantity'])
+        stock_quantity = int(request.form['stock_quantity']) if request.form.get('stock_quantity') else None
         deadline_time = datetime.strptime(request.form['deadline_time'], '%H:%M').time() if request.form['deadline_time'] else None
-        show_date = datetime.strptime(request.form['show_date'], '%Y-%m-%d').date()
+        show_date = datetime.strptime(request.form['show_date'], '%Y-%m-%d').date() if request.form.get('show_date') else None
         
         img_filename = save_image(request.files.get('image'))
         

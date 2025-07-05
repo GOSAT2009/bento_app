@@ -39,15 +39,30 @@
             </div>
             
             <div class="form-group">
-                <label>在庫数: <input type="number" name="stock_quantity" id="productStock" required></label>
+                <label>
+                    <input type="checkbox" id="enableStock" onchange="toggleStockInput()"> 在庫数を設定
+                </label>
+                <div id="stockGroup" style="display: none;">
+                    <label>在庫数: <input type="number" name="stock_quantity" id="productStock"></label>
+                </div>
             </div>
             
             <div class="form-group">
-                <label>注文締切時間: <input type="time" name="deadline_time" id="productDeadline"></label>
+                <label>
+                    <input type="checkbox" id="enableDeadline" onchange="toggleDeadlineInput()"> 注文締切時間を設定
+                </label>
+                <div id="deadlineGroup" style="display: none;">
+                    <label>注文締切時間: <input type="time" name="deadline_time" id="productDeadline"></label>
+                </div>
             </div>
             
             <div class="form-group">
-                <label>表示日: <input type="date" name="show_date" id="productShowDate" required></label>
+                <label>
+                    <input type="checkbox" id="enableShowDate" onchange="toggleShowDateInput()"> 表示日を設定
+                </label>
+                <div id="showDateGroup" style="display: none;">
+                    <label>表示日: <input type="date" name="show_date" id="productShowDate"></label>
+                </div>
             </div>
             
             <div class="form-group">
@@ -69,8 +84,16 @@
                             <h3>{{ product.name }}</h3>
                             <p>カテゴリ: {{ product.category }}</p>
                             <p>価格: {{ product.price }}円</p>
-                            <p>在庫: {{ product.stock_quantity }}個</p>
-                            <p>表示日: {{ product.show_date }}</p>
+                            {% if product.stock_quantity is not none %}
+                                <p>在庫: {{ product.stock_quantity }}個</p>
+                            {% else %}
+                                <p>在庫: 無制限</p>
+                            {% endif %}
+                            {% if product.show_date %}
+                                <p>表示日: {{ product.show_date }}</p>
+                            {% else %}
+                                <p>表示日: 常時表示</p>
+                            {% endif %}
                             {% if product.deadline_time %}
                                 <p>締切: {{ product.deadline_time.strftime('%H:%M') }}</p>
                             {% endif %}
@@ -80,7 +103,7 @@
                                  alt="{{ product.name }}" class="product-image-small">
                         {% endif %}
                         <div class="product-actions">
-                            <button class="btn btn-small" onclick="editProduct({{ product.id }}, '{{ product.name }}', '{{ product.category }}', {{ product.price }}, {{ product.stock_quantity }}, '{{ product.deadline_time or '' }}', '{{ product.show_date }}')">編集</button>
+                            <button class="btn btn-small" onclick="editProduct({{ product.id }}, '{{ product.name }}', '{{ product.category }}', {{ product.price }}, '{{ product.stock_quantity or '' }}', '{{ product.deadline_time or '' }}', '{{ product.show_date or '' }}')">編集</button>
                         </div>
                     </div>
                 {% endfor %}
@@ -111,9 +134,36 @@
             document.getElementById('productName').value = name;
             document.getElementById('productCategory').value = category;
             document.getElementById('productPrice').value = price;
-            document.getElementById('productStock').value = stock;
-            document.getElementById('productDeadline').value = deadline;
-            document.getElementById('productShowDate').value = showDate;
+            
+            // 在庫数の処理
+            if (stock !== 'None' && stock !== '') {
+                document.getElementById('enableStock').checked = true;
+                document.getElementById('stockGroup').style.display = 'block';
+                document.getElementById('productStock').value = stock;
+            } else {
+                document.getElementById('enableStock').checked = false;
+                document.getElementById('stockGroup').style.display = 'none';
+            }
+            
+            // 締切時間の処理
+            if (deadline !== 'None' && deadline !== '') {
+                document.getElementById('enableDeadline').checked = true;
+                document.getElementById('deadlineGroup').style.display = 'block';
+                document.getElementById('productDeadline').value = deadline;
+            } else {
+                document.getElementById('enableDeadline').checked = false;
+                document.getElementById('deadlineGroup').style.display = 'none';
+            }
+            
+            // 表示日の処理
+            if (showDate !== 'None' && showDate !== '') {
+                document.getElementById('enableShowDate').checked = true;
+                document.getElementById('showDateGroup').style.display = 'block';
+                document.getElementById('productShowDate').value = showDate;
+            } else {
+                document.getElementById('enableShowDate').checked = false;
+                document.getElementById('showDateGroup').style.display = 'none';
+            }
         }
 
         function clearForm() {
@@ -125,6 +175,57 @@
             document.getElementById('productDeadline').value = '';
             document.getElementById('productShowDate').value = '';
             document.getElementById('newCategoryGroup').style.display = 'none';
+            
+            // チェックボックスをリセット
+            document.getElementById('enableStock').checked = false;
+            document.getElementById('enableDeadline').checked = false;
+            document.getElementById('enableShowDate').checked = false;
+            document.getElementById('stockGroup').style.display = 'none';
+            document.getElementById('deadlineGroup').style.display = 'none';
+            document.getElementById('showDateGroup').style.display = 'none';
+        }
+        
+        function toggleStockInput() {
+            const enableStock = document.getElementById('enableStock');
+            const stockGroup = document.getElementById('stockGroup');
+            const productStock = document.getElementById('productStock');
+            
+            if (enableStock.checked) {
+                stockGroup.style.display = 'block';
+                productStock.required = true;
+            } else {
+                stockGroup.style.display = 'none';
+                productStock.required = false;
+                productStock.value = '';
+            }
+        }
+        
+        function toggleDeadlineInput() {
+            const enableDeadline = document.getElementById('enableDeadline');
+            const deadlineGroup = document.getElementById('deadlineGroup');
+            const productDeadline = document.getElementById('productDeadline');
+            
+            if (enableDeadline.checked) {
+                deadlineGroup.style.display = 'block';
+            } else {
+                deadlineGroup.style.display = 'none';
+                productDeadline.value = '';
+            }
+        }
+        
+        function toggleShowDateInput() {
+            const enableShowDate = document.getElementById('enableShowDate');
+            const showDateGroup = document.getElementById('showDateGroup');
+            const productShowDate = document.getElementById('productShowDate');
+            
+            if (enableShowDate.checked) {
+                showDateGroup.style.display = 'block';
+                productShowDate.required = true;
+            } else {
+                showDateGroup.style.display = 'none';
+                productShowDate.required = false;
+                productShowDate.value = '';
+            }
         }
 
         

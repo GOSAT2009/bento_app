@@ -138,15 +138,15 @@ def predict_sales(product_id, days_ahead=3):
     return predictions
 
 # データベース初期化
-@app.before_first_request
 def create_tables():
-    db.create_all()
-    
-    # 管理者アカウントがない場合は作成
-    if not Admin.query.first():
-        admin = Admin(username='admin', password='admin')
-        db.session.add(admin)
-        db.session.commit()
+    with app.app_context():
+        db.create_all()
+        
+        # 管理者アカウントがない場合は作成
+        if not Admin.query.first():
+            admin = Admin(username='admin', password='admin')
+            db.session.add(admin)
+            db.session.commit()
 
 # ------------------ 利用者向け ------------------
 
@@ -489,12 +489,5 @@ def password_change():
     return render_template('password_change.html')
 
 if __name__ == '__main__':
-    with app.app_context():
-        db.create_all()
-        # 管理者アカウントがない場合は作成
-        if not Admin.query.first():
-            admin = Admin(username='admin', password='admin')
-            db.session.add(admin)
-            db.session.commit()
-    
+    create_tables()
     app.run(host='0.0.0.0', port=5000, debug=True)

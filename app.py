@@ -266,7 +266,13 @@ def product_register():
     if request.method == 'POST':
         product_id = request.form.get('product_id')
         name = request.form['name']
-        category = request.form['category']
+        category = request.form.get('category')
+        new_category = request.form.get('new_category')
+        
+        # 新しいカテゴリが入力されている場合はそれを使用
+        if new_category:
+            category = new_category
+        
         price = float(request.form['price'])
         stock_quantity = int(request.form['stock_quantity'])
         deadline_time = datetime.strptime(request.form['deadline_time'], '%H:%M').time() if request.form['deadline_time'] else None

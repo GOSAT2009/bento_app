@@ -270,8 +270,15 @@ def product_register():
         new_category = request.form.get('new_category')
         
         # 新しいカテゴリが入力されている場合はそれを使用
-        if new_category:
-            category = new_category
+        if new_category and new_category.strip():
+            category = new_category.strip()
+        
+        # カテゴリが空の場合はエラーメッセージを表示
+        if not category or category.strip() == '':
+            flash('カテゴリを選択または入力してください', 'error')
+            products = Product.query.all()
+            categories = list(set([p.category for p in products]))
+            return render_template('product_register.html', products=products, categories=categories)
         
         price = float(request.form['price'])
         stock_quantity = int(request.form['stock_quantity'])

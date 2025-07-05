@@ -11,7 +11,7 @@
     <div class="container">
         <h1>商品登録・管理</h1>
         
-        <form method="post" enctype="multipart/form-data" class="product-form">
+        <form method="post" enctype="multipart/form-data" class="product-form" onsubmit="return validateForm()">
             <input type="hidden" name="product_id" id="productId">
             
             <div class="form-group">
@@ -128,6 +128,22 @@
         }
 
         
+    function validateForm() {
+            const category = document.getElementById('productCategory').value;
+            const newCategory = document.getElementById('newCategoryName').value;
+            
+            if (!category || category === '') {
+                alert('カテゴリを選択してください');
+                return false;
+            }
+            
+            if (category === 'new' && (!newCategory || newCategory.trim() === '')) {
+                alert('新しいカテゴリ名を入力してください');
+                return false;
+            }
+            
+            return true;
+        }
     </script>
 </body>
 </html>

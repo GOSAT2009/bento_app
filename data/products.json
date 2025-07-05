@@ -1,4 +1,20 @@
 {
-  "bento": [],
-  "bread": []
+  "bento": [
+    
+    {
+      "name": "日替わり弁当",
+      "price": 400.0,
+      "show_today": true,
+      "image": "img7770.jpg"
+    }
+  ],
+  "bread": [
+    {
+      "name": "あんぱん",
+      "price": 120.0,
+      "quantity": 12,
+      "show_today": true,
+      "image": "images.jpg"
+    }
+  ]
 }

@@ -12,15 +12,12 @@
     <p>ありがとうございました。</p>
     <div>
         <h2>注文内容</h2>
-        <p>学年: {{ order.grade }}</p>
-        <p>組: {{ order.class }}</p>
-        <p>番号: {{ order.number }}</p>
-        <p>名前: {{ order.name }}</p>
+    
         <p>弁当: {{ order.bento|join(', ') }}</p>
         <p>パン: {{ order.bread|join(', ') }}</p>
         <p>合計金額: {{ order.total_price }}円</p>
     </div>
-    <a href="{{ url_for('user_top') }}">トップページに戻る</a>
+  
 </body>
 </html>
 <!DOCTYPE html>
@@ -31,9 +28,8 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 </head>
 <body>
-    <h1>注文完了</h1>
     <div class="order-summary">
-        <p><strong>注文ID:</strong> {{ order.id4 }}</p>
+       </p>
         <p><strong>学年:</strong> {{ order.grade }}</p>
         <p><strong>組:</strong> {{ order.class }}</p>
         <p><strong>番号:</strong> {{ order.number }}</p>

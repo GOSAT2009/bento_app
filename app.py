@@ -200,8 +200,9 @@ def order():
                     )
                     db.session.add(order_item)
                     
-                    # 在庫更新
-                    product.stock_quantity -= int(value)
+                    # 在庫更新（在庫数が設定されている場合のみ）
+                    if product.stock_quantity is not None:
+                        product.stock_quantity -= int(value)
         
         db.session.commit()
         session['last_order_id'] = order_id

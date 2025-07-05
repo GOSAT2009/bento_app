@@ -1,0 +1,57 @@
+
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>販売数入力</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <div class="container">
+        <h1>販売数入力</h1>
+        
+        <form method="post" class="sales-form">
+            <div class="form-group">
+                <label>商品: 
+                    <select name="product_id" required>
+                        <option value="">選択してください</option>
+                        {% for product in products %}
+                            <option value="{{ product.id }}">{{ product.name }} ({{ product.category }})</option>
+                        {% endfor %}
+                    </select>
+                </label>
+            </div>
+            
+            <div class="form-group">
+                <label>日付: <input type="date" name="sale_date" required></label>
+            </div>
+            
+            <div class="form-group">
+                <label>販売数: <input type="number" name="quantity_sold" min="0" required></label>
+            </div>
+            
+            <div class="form-actions">
+                <button type="submit" class="btn btn-primary">登録</button>
+            </div>
+        </form>
+        
+        <div class="sales-records">
+            <h2>最近の販売数登録</h2>
+            <div class="records-list">
+                {% for record in sales_records %}
+                    <div class="record-item">
+                        <span class="date">{{ record.sale_date }}</span>
+                        <span class="product">{{ record.product.name }}</span>
+                        <span class="quantity">{{ record.quantity_sold }}個</span>
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+        
+        <div class="navigation">
+            <a href="{{ url_for('admin_top') }}" class="btn btn-secondary">管理者トップに戻る</a>
+        </div>
+    </div>
+</body>
+</html>

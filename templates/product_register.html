@@ -1,0 +1,151 @@
+
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>商品登録・管理</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <div class="container">
+        <h1>商品登録・管理</h1>
+        
+        <form method="post" enctype="multipart/form-data" class="product-form">
+            <input type="hidden" name="product_id" id="productId">
+            
+            <div class="form-group">
+                <label>商品名: <input type="text" name="name" id="productName" required></label>
+            </div>
+            
+            <div class="form-group">
+                <label>カテゴリ: 
+                    <select name="category" id="productCategory" required>
+                        <option value="">選択してください</option>
+                        {% for category in categories %}
+                            <option value="{{ category }}">{{ category }}</option>
+                        {% endfor %}
+                        <option value="new">新しいカテゴリ</option>
+                    </select>
+                </label>
+            </div>
+            
+            <div class="form-group" id="newCategoryGroup" style="display: none;">
+                <label>新しいカテゴリ名: <input type="text" id="newCategoryName"></label>
+            </div>
+            
+            <div class="form-group">
+                <label>価格: <input type="number" name="price" id="productPrice" step="0.01" required></label>
+            </div>
+            
+            <div class="form-group">
+                <label>在庫数: <input type="number" name="stock_quantity" id="productStock" required></label>
+            </div>
+            
+            <div class="form-group">
+                <label>注文締切時間: <input type="time" name="deadline_time" id="productDeadline"></label>
+            </div>
+            
+            <div class="form-group">
+                <label>表示日: <input type="date" name="show_date" id="productShowDate" required></label>
+            </div>
+            
+            <div class="form-group">
+                <label>商品画像: <input type="file" name="image" accept="image/*"></label>
+            </div>
+            
+            <div class="form-actions">
+                <button type="submit" class="btn btn-primary">登録・更新</button>
+                <button type="button" class="btn btn-secondary" onclick="clearForm()">クリア</button>
+            </div>
+        </form>
+        
+        <div class="products-list">
+            <h2>登録済み商品</h2>
+            <div class="products-grid">
+                {% for product in products %}
+                    <div class="product-card">
+                        <div class="product-info">
+                            <h3>{{ product.name }}</h3>
+                            <p>カテゴリ: {{ product.category }}</p>
+                            <p>価格: {{ product.price }}円</p>
+                            <p>在庫: {{ product.stock_quantity }}個</p>
+                            <p>表示日: {{ product.show_date }}</p>
+                            {% if product.deadline_time %}
+                                <p>締切: {{ product.deadline_time.strftime('%H:%M') }}</p>
+                            {% endif %}
+                        </div>
+                        {% if product.image %}
+                            <img src="{{ url_for('static', filename='uploads/' + product.image) }}" 
+                                 alt="{{ product.name }}" class="product-image-small">
+                        {% endif %}
+                        <div class="product-actions">
+                            <button class="btn btn-small" onclick="editProduct({{ product.id }}, '{{ product.name }}', '{{ product.category }}', {{ product.price }}, {{ product.stock_quantity }}, '{{ product.deadline_time or '' }}', '{{ product.show_date }}')">編集</button>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+        
+        <div class="navigation">
+            <a href="{{ url_for('admin_top') }}" class="btn btn-secondary">管理者トップに戻る</a>
+        </div>
+    </div>
+
+    <script>
+        document.getElementById('productCategory').addEventListener('change', function() {
+            const newCategoryGroup = document.getElementById('newCategoryGroup');
+            const newCategoryName = document.getElementById('newCategoryName');
+            
+            if (this.value === 'new') {
+                newCategoryGroup.style.display = 'block';
+                newCategoryName.required = true;
+            } else {
+                newCategoryGroup.style.display = 'none';
+                newCategoryName.required = false;
+            }
+        });
+
+        function editProduct(id, name, category, price, stock, deadline, showDate) {
+            document.getElementById('productId').value = id;
+            document.getElementById('productName').value = name;
+            document.getElementById('productCategory').value = category;
+            document.getElementById('productPrice').value = price;
+            document.getElementById('productStock').value = stock;
+            document.getElementById('productDeadline').value = deadline;
+            document.getElementById('productShowDate').value = showDate;
+        }
+
+        function clearForm() {
+            document.getElementById('productId').value = '';
+            document.getElementById('productName').value = '';
+            document.getElementById('productCategory').value = '';
+            document.getElementById('productPrice').value = '';
+            document.getElementById('productStock').value = '';
+            document.getElementById('productDeadline').value = '';
+            document.getElementById('productShowDate').value = '';
+            document.getElementById('newCategoryGroup').style.display = 'none';
+        }
+
+        // カテゴリ変更時の処理
+        document.getElementById('productCategory').addEventListener('change', function() {
+            const newCategoryGroup = document.getElementById('newCategoryGroup');
+            const newCategoryName = document.getElementById('newCategoryName');
+            
+            if (this.value === 'new') {
+                newCategoryGroup.style.display = 'block';
+                newCategoryName.required = true;
+                // フォーム送信時に新しいカテゴリ名を使用
+                document.querySelector('.product-form').addEventListener('submit', function(e) {
+                    if (document.getElementById('productCategory').value === 'new') {
+                        document.getElementById('productCategory').value = newCategoryName.value;
+                    }
+                });
+            } else {
+                newCategoryGroup.style.display = 'none';
+                newCategoryName.required = false;
+            }
+        });
+    </script>
+</body>
+</html>

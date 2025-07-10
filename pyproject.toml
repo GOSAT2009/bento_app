@@ -8,6 +8,7 @@ authors = ["Your Name <you@example.com>"]
 python = ">=3.10.0,<3.11"
 replit = "^3.2.4"
 Flask = "2.3.2"
+gunicorn = "^21.2"
 werkzeug = ">=2.3.3"
 pillow = "^11.3.0"
 plotly = "^6.2.0"
